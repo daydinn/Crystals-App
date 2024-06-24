@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -23,6 +25,10 @@ function App() {
         <div>
         <h1>{message}</h1>
    </div>
+   <h1>Login</h1>
+            <LoginForm />
+            <h1>Register</h1>
+            <RegisterForm />
    </div> 
   
    

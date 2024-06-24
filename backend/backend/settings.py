@@ -39,6 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'corsheaders',
+     'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -55,6 +62,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+        'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -74,6 +83,19 @@ TEMPLATES = [
         },
     },
 ]
+
+# Authentication settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_REQUIRED = False
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
