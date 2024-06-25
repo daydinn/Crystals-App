@@ -5,47 +5,44 @@ function RegisterForm() {
     const [username, setUsername] = useState('');
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [gender, setGender] = useState('');
+    const [age, setAge] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setMessage('');
+        setError('');
         axios.post('http://127.0.0.1:8000/api/auth/registration/', {
             username,
             password1,
-            password2
+            password2,
+            first_name: firstName,
+            last_name: lastName,
+            gender,
+            age,
+            birth_date: birthDate,
         })
         .then(response => {
             console.log(response.data);
+            setMessage('Registration successful!');
             // Store the token
             localStorage.setItem('token', response.data.key);
-            // Set success state to true
-            setSuccess(true);
-            // Clear any previous errors
-            setError('');
         })
         .catch(error => {
-            if (error.response) {
-                // Request was made and server responded
-                console.error('There was an error registering!', error.response.data);
-                setError(JSON.stringify(error.response.data)); // Set the exact error message
-                setSuccess(false); // Ensure success is false in case of error
-            } else if (error.request) {
-                // Request was made but no response
-                console.error('No response received!', error.request);
-                setError('No response received from server');
-                setSuccess(false);
-            } else {
-                // Something else happened
-                console.error('Error', error.message);
-                setError(error.message);
-                setSuccess(false);
-            }
+            console.error('There was an error registering!', error.response.data);
+            setError('Registration failed. Please try again.');
         });
     };
 
     return (
         <form onSubmit={handleSubmit}>
+            {message && <p style={{ color: 'green' }}>{message}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <input
                 type="text"
                 placeholder="Username"
@@ -64,9 +61,36 @@ function RegisterForm() {
                 value={password2}
                 onChange={(e) => setPassword2(e.target.value)}
             />
+            <input
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+            />
+            <input
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+            />
+            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                <option value="">Select Gender</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+            <input
+                type="number"
+                placeholder="Age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+            />
+            <input
+                type="date"
+                placeholder="Birth Date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+            />
             <button type="submit">Register</button>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            {success && <div style={{ color: 'green' }}>Registration successful!</div>}
         </form>
     );
 }
