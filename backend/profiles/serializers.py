@@ -29,3 +29,8 @@ class CustomRegisterSerializer(RegisterSerializer):
             birth_date=self.validated_data.get('birth_date', None)
         )
         return user
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'gender', 'age', 'birth_date']

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function LoginForm() {
+function LoginForm({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,49 +17,62 @@ function LoginForm() {
             console.log(response.data);
             // Store the token
             localStorage.setItem('token', response.data.key);
-            // Set success state to true
-            setSuccess(true);
-            // Clear any previous errors
-            setError('');
-        })
+            // Display success message
+            toast.success('Login successful!', {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            // Clear input fields
+            setUsername('');
+            setPassword('');
+            // Trigger login success handler
+            if (onLoginSuccess) {
+                onLoginSuccess();
+            }        })
         .catch(error => {
             if (error.response) {
                 // Request was made and server responded
                 console.error('There was an error logging in!', error.response.data);
-                setError(JSON.stringify(error.response.data)); // Set the exact error message
-                setSuccess(false); // Ensure success is false in case of error
+                toast.error('Login failed. Please try again.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
             } else if (error.request) {
                 // Request was made but no response
                 console.error('No response received!', error.request);
-                setError('No response received from server');
-                setSuccess(false);
+                toast.error('No response received from server', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
             } else {
                 // Something else happened
                 console.error('Error', error.message);
-                setError(error.message);
-                setSuccess(false);
+                toast.error('Error: ' + error.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
             }
         });
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Login</button>
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            {success && <div style={{ color: 'green' }}>Login successful!</div>}
-        </form>
+        <>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button type="submit">Login</button>
+            </form>
+        </>
     );
 }
 

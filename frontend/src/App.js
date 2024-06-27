@@ -1,38 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
+import Profile from './components/Profile';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/hello/')
-      .then(response => {
-        setMessage(response.data.message);
-      })
-      .catch(error => {
-        console.error("There was an error making the request:", error);
-      });
-  }, []);
-
-  return (
-    <div>
- 
-   
-        <p className="text-2xl">Welcome!</p>
-
-        <div>
-        <h1>{message}</h1>
-   </div>
-   <h1>Login</h1>
-            <LoginForm />
-            <h1>Register</h1>
-            <RegisterForm />
-   </div> 
-  
-   
-  );
+    return (
+        <Router>
+            <div>
+                <ToastContainer />
+                <Routes>
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm />} />
+                    <Route path="/profile" element={<Profile />} />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
